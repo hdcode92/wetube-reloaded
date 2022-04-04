@@ -12,9 +12,9 @@ import User from "../models/User";
 */
 
 export const home = async (req, res) => {
-    const videos = await Video
-        .find({})
-        .sort({createdAt: "1"});
+    const videos = await Video.find({})
+    .sort({ createdAt: "desc" })
+    .populate("owner");
     return res.render("home", {
         pageTitle: "Home",
         videos
@@ -141,10 +141,9 @@ export const search = async (req, res) => {
     if (keyword) {
         videos = await Video.find({
             title: {
-                $regex: new RegExp(keyword, "i")
-            }
-        });
-        console.log(videos)
+                $regex: new RegExp(keyword, "i"),
+            },
+        }).populate("owner");
     }
     return res.render("search", {
         pageTitle: "Search",
